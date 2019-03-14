@@ -1,4 +1,4 @@
-package com.example.homework_tracker;
+package com.wieders.homework_tracker;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
