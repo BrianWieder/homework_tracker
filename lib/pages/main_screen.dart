@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../components/course_card.dart';
 import '../models/course.dart';
@@ -43,13 +44,30 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       body: Center(
-        child: ListView.builder(
-          itemCount: courses.length,
-          itemBuilder: (BuildContext buildContext, int index) {
-            return CourseCard(courses[index]);
-          },
-        ),
+        child: _buildBody(),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/course-creation');
+        },
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection("courses").snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return ListView.builder(
+          itemCount: snapshot.data.documents.length,
+          itemBuilder: (BuildContext buildContext, int index) {
+            Course course = Course.fromSnapshot(snapshot.data.documents[index]);
+            return CourseCard(course);
+          },
+        );
+      },
     );
   }
 }

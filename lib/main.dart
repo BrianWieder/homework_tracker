@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import './pages/login_screen.dart';
 import './pages/main_screen.dart';
 import './pages/course_detail.dart';
+import './pages/course_new_screen.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -46,7 +47,8 @@ class _HomeworkTrackerAppState extends State<HomeworkTrackerApp> {
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => LoginScreen(),
         '/main': (BuildContext context) => MainScreen(),
-        '/course-detail': (BuildContext context) => CourseDetail()
+        '/course-detail': (BuildContext context) => CourseDetail(),
+        '/course-creation': (BuildContext context) => CourseNewScreen()
       },
       theme: ThemeData.dark(),
     );

@@ -9,14 +9,21 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(course.courseName),
-      subtitle: Text(course.members.toString()),
-      onTap: () {
-        String courseName = course.courseName;
-        print("$courseName clicked!");
-        Navigator.of(context).pushNamed("/course-detail", arguments: course);
-      },
+    String courseId = course.courseId;
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: Text(course.courseName),
+          subtitle: Text('Course Id: $courseId'),
+          onTap: () {
+            String courseName = course.courseName;
+            print("$courseName clicked!");
+            Navigator.of(context)
+                .pushNamed("/course-detail", arguments: course);
+          },
+        ),
+        Divider()
+      ],
     );
   }
 }
