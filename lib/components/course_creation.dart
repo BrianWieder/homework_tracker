@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../models/course.dart';
 
 class CourseCreation extends StatefulWidget {
   @override
@@ -32,6 +36,22 @@ class _CourseCreationState extends State<CourseCreation> {
               onPressed: () {
                 if (_courseCreationFormKey.currentState.validate()) {
                   _courseCreationFormKey.currentState.save();
+                  FirebaseAuth.instance.currentUser().then((user) {
+                    Firestore.instance.collection("courses").add({
+                      "course_name": className,
+                      "members": [user.uid]
+                    }).then((newCourse) {
+                      setState(() {
+                        className = "";
+                      });
+                      newCourse.get().then((snapshot) {
+                        Course course = Course.fromSnapshot(snapshot);
+                        Navigator.of(context).pushReplacementNamed(
+                            "/course-detail",
+                            arguments: course);
+                      });
+                    });
+                  });
                 }
               },
             )
@@ -43,7 +63,7 @@ class _CourseCreationState extends State<CourseCreation> {
 
   validator(String value, String inputName) {
     if (value.trim().length <= 0) {
-      return 'You need a class name!';
+      return "$inputName is required!";
     }
   }
 }

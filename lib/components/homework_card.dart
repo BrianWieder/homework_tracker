@@ -22,7 +22,7 @@ class HomeworkCard extends StatelessWidget {
                 fontSize: 24.0,
               ),
             ),
-            Text(homework.dueDate.toString()),
+            Text(getDueDateString(homework.dueDate)),
             Divider(),
             Text(
               "Comments:",
@@ -33,7 +33,7 @@ class HomeworkCard extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Text('Brian Wieder: '),
-                  Text('What pages is this?'),
+                  Text('What pages is on?'),
                 ],
               ),
             )
@@ -41,5 +41,9 @@ class HomeworkCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getDueDateString(DateTime date) {
+    return "Due on ${date.month}/${date.day}/${date.year}";
   }
 }

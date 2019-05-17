@@ -33,6 +33,13 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Widget body;
+    if (user != null) {
+      body = _buildBody();
+    } else {
+      body = Container();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Homework Tracker"),
@@ -44,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       body: Center(
-        child: _buildBody(),
+        child: body,
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -57,7 +64,10 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildBody() {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection("courses").snapshots(),
+      stream: Firestore.instance
+          .collection("courses")
+          .where("members", arrayContains: user.uid)
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
         return ListView.builder(

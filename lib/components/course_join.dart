@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CourseJoin extends StatefulWidget {
   @override
@@ -32,6 +34,24 @@ class _CourseJoinState extends State<CourseJoin> {
               onPressed: () {
                 if (_courseCreationFormKey.currentState.validate()) {
                   _courseCreationFormKey.currentState.save();
+                  FirebaseAuth.instance.currentUser().then((user) {
+                    Firestore.instance
+                        .document("courses/$courseId")
+                        .updateData({
+                      "members": FieldValue.arrayUnion([user.uid])
+                    }).then((value) {
+                      Navigator.of(context).pop();
+                    }).catchError((err) {
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text("That is not a valid course ID"),
+                        duration: Duration(seconds: 3),
+                        action: SnackBarAction(
+                          label: "Ok",
+                          onPressed: () {},
+                        ),
+                      ));
+                    });
+                  });
                 }
               },
             )

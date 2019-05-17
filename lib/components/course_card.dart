@@ -14,10 +14,8 @@ class CourseCard extends StatelessWidget {
       children: <Widget>[
         ListTile(
           title: Text(course.courseName),
-          subtitle: Text('Course Id: $courseId'),
+          subtitle: Text('Course ID: $courseId'),
           onTap: () {
-            String courseName = course.courseName;
-            print("$courseName clicked!");
             Navigator.of(context)
                 .pushNamed("/course-detail", arguments: course);
           },
