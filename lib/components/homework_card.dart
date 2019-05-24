@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:homework_tracker/models/comment.dart';
 
 import '../models/homework.dart';
 
@@ -9,35 +11,54 @@ class HomeworkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              homework.title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
+    return GestureDetector(
+      onTap: () {
+        print('${homework.title} - pressed');
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                homework.title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
               ),
-            ),
-            Text(getDueDateString(homework.dueDate)),
-            Divider(),
-            Text(
-              "Comments:",
-              style: TextStyle(fontSize: 18.0),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Row(
-                children: <Widget>[
-                  Text('Brian Wieder: '),
-                  Text('What pages is on?'),
-                ],
+              Text(getDueDateString(homework.dueDate)),
+              Divider(),
+              Text(
+                "Comments:",
+                style: TextStyle(fontSize: 18.0),
               ),
-            )
-          ],
+              StreamBuilder<QuerySnapshot>(
+                stream: homework.reference.collection("comments").snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return LinearProgressIndicator();
+                  List<Widget> commentWidgets = List<Widget>();
+                  for (int i = 0; i < snapshot.data.documents.length; i++) {
+                    Comment comment =
+                        Comment.fromSnapshot(snapshot.data.documents[i]);
+                    commentWidgets.add(Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text("${comment.name}: "),
+                          Text(comment.comment),
+                        ],
+                      ),
+                    ));
+                  }
+                  return Column(
+                    children: commentWidgets,
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

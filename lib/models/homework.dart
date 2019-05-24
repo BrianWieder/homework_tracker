@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import './comment.dart';
 
 class Homework {
   DateTime dueDate;
   String title;
+  List<Comment> comments;
 
   DocumentReference reference;
 

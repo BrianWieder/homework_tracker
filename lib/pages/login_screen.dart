@@ -15,6 +15,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String email = '';
   String password = '';
+  String name = '';
+
+  bool signedUp = false;
 
   _LoginScreenState() {
     _auth.onAuthStateChanged.listen(this.onAuthStateChanged);
@@ -22,7 +25,38 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void onAuthStateChanged(FirebaseUser user) {
     if (user != null) {
-      Navigator.of(context).pushReplacementNamed("/main");
+      if (signedUp) {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Please enter your name"),
+                content: TextField(
+                  decoration: InputDecoration(
+                      hintText: "Brian Wieder", labelText: "Name"),
+                  onChanged: (name) {
+                    setState(() {
+                      this.name = name;
+                    });
+                  },
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Done"),
+                    onPressed: () {
+                      UserUpdateInfo userInfo = UserUpdateInfo();
+                      userInfo.displayName = name;
+                      user.updateProfile(userInfo);
+                      Navigator.of(context).pushReplacementNamed("/main");
+                    },
+                  )
+                ],
+              );
+            });
+      } else {
+        Navigator.of(context).pushReplacementNamed("/main");
+      }
     }
   }
 
@@ -115,9 +149,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text("Register"),
                       onPressed: () {
                         if (_loginFormKey.currentState.validate()) {
+                          setState(() {
+                            signedUp = true;
+                          });
                           _loginFormKey.currentState.save();
-                          _auth.createUserWithEmailAndPassword(
-                              email: email, password: password);
+                          _auth
+                              .createUserWithEmailAndPassword(
+                                  email: email, password: password)
+                              .then((user) {});
                         }
                       },
                       color: Theme.of(context).accentColor,

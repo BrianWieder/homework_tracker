@@ -7,11 +7,6 @@ import '../models/course.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-List<Course> courses = [
-  Course("Linear", ["5VTaXlPLMobE0bRaW83g8iLZeZr1"], ["6.1", "6.2"]),
-  Course("Stat", ["5VTaXlPLMobE0bRaW83g8iLZeZr1"], ["Stuff"])
-];
-
 class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
