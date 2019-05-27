@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:homework_tracker/models/comment.dart';
 
 import '../models/homework.dart';
+import './comment_alert.dart';
 
 class HomeworkCard extends StatelessWidget {
   final Homework homework;
@@ -13,7 +14,11 @@ class HomeworkCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('${homework.title} - pressed');
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CommentAlert(homework);
+            });
       },
       child: Card(
         child: Padding(
